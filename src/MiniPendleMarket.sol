@@ -29,11 +29,11 @@ contract MiniPendleMarket {
 
     // ---- Core flow ----
 
-    function deposit(uint256 amt, address to) external update {
-        underlying.transferFrom(msg.sender, address(this), amt);
+    function deposit(uint256 amount, address to) external update {
+        underlying.transferFrom(msg.sender, address(this), amount);
 
         // Assume 1 underlying = 1 USDC unit (if aUSDC, it's ~1:1)
-        uint256 principalUnits = amt;
+        uint256 principalUnits = amount;
         requiredPrincipal += principalUnits;
 
         pt.mint(to, principalUnits);
@@ -44,9 +44,9 @@ contract MiniPendleMarket {
 
     function claimYield(address to) external update {
         _settleUser(msg.sender);
-        uint256 amt = userClaimable[msg.sender];
+        uint256 amount = userClaimable[msg.sender];
         userClaimable[msg.sender] = 0;
-        _payUnderlyingAsUSDC(to, amt);
+        _payUnderlyingAsUSDC(to, amount);
     }
 
     function redeemPT(uint256 ptAmount, address to) external {
@@ -58,6 +58,19 @@ contract MiniPendleMarket {
 
     // ---- Accounting ----
 
+    // update:
+    // - checks if yield has accrued & updates 'yieldPerYTStored' if it has
+    //
+    // example:
+    // - 100 aUSDC is deposited
+    // - 10 aUSDC yield has accrued
+    // - 110 aUSDC in total assets (aUSDC.balanceOf(this) == 110)
+    // - aUSDC is always 1:1 with USDC
+    // 
+    // claims:
+    // - PT (100 minted): $100 (we always hold onto this to make sure PT holders can claim at expiry)
+    // - YT (100 minted): $10 / 100 = $0.1 yieldPerYTStored
+    //
     modifier update() {
         uint256 assets = totalAssetsInUSDC();
         uint256 principal = requiredPrincipal;
@@ -87,9 +100,9 @@ contract MiniPendleMarket {
         return underlying.balanceOf(address(this));
     }
 
-    function _payUnderlyingAsUSDC(address to, uint256 amt) internal {
+    function _payUnderlyingAsUSDC(address to, uint256 amount) internal {
         // For demo: just transfer aUSDC directly
         // For realism: redeem aUSDC -> USDC and send that
-        underlying.transfer(to, amt);
+        underlying.transfer(to, amount);
     }
 }
