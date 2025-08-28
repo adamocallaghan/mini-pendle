@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {PTToken} from "./PTToken.sol";
+import {YTToken} from "./YTToken.sol";
+
 contract MiniPendleMarket {
     IERC20 public underlying;
     PTToken public pt;
