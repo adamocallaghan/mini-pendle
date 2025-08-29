@@ -62,7 +62,7 @@ contract MiniPendleMarket {
     // - checks if yield has accrued & updates 'yieldPerYTStored' if it has
     //
     // example:
-    // - 100 aUSDC is deposited
+    // - 100 aUSDC is deposited (aUSDC.balanceOf(this) == 100)
     // - 10 aUSDC yield has accrued
     // - 110 aUSDC in total assets (aUSDC.balanceOf(this) == 110)
     // - aUSDC is always 1:1 with USDC
@@ -84,6 +84,11 @@ contract MiniPendleMarket {
         _;
     }
 
+    // _settleUser:
+    // - checks if the user has any outstanding yield
+    // - allows them to claim outstanding (via claim func)
+    // - resets their yield paid out to the current yield per YT
+    // - that way any delta next _settleUser call will be settled too
     function _settleUser(address u) internal {
         uint256 delta = yieldPerYTStored - userYieldPerYTPaid[u];
         if (delta > 0) {
