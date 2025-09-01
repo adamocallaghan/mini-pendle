@@ -6,3 +6,9 @@ libs = ["lib"]
 remappings = [
     "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
 ]
+
+[rpc_endpoints]
+monad-testnet = "${MONAD_TESTNET_RPC}"
+
+[etherscan]
+monad-testnet = { key = "${MONAD_ETHERSCAN_API_KEY}" }
