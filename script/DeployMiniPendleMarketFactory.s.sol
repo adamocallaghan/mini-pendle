@@ -19,7 +19,9 @@ contract DeployScript is Script {
         // Example params for first market
         address underlying = 0x0000000000000000000000000000000000000000; // replace with real aUSDC/lending receipt token
         uint256 maturity = block.timestamp + 90 days;
+        string memory marketName = "USDC-aUSDC-AAVE";
 
+        // Deploy Market
         address market = factory.createMarket(IERC20(underlying), maturity);
         console.log("First market deployed at:", market);
 

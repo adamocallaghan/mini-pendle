@@ -11,6 +11,7 @@ import {YTToken} from "./YTToken.sol";
 contract MiniPendleMarket {
     IERC20 public immutable underlying; // e.g. aUSDC
     uint256 public immutable expiry;
+    string public marketName;
 
     PTToken public immutable pt;
     YTToken public immutable yt;
@@ -29,9 +30,10 @@ contract MiniPendleMarket {
     // per-user claimable amount (in USDC underlying units)
     mapping(address => uint256) public userClaimable;
 
-    constructor(IERC20 _underlying, uint256 _expiry) {
+    constructor(IERC20 _underlying, uint256 _expiry, string memory _marketName) {
         underlying = _underlying;
         expiry = _expiry;
+        marketName = _marketName;
 
         // Deploy PT + YT tokens owned by THIS market
         pt = new PTToken("Principal Token", "PT", address(this));

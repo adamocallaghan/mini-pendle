@@ -10,10 +10,10 @@ contract MiniPendleMarketFactory {
     mapping(address => mapping(uint256 => address)) public getMarket; 
     // underlying => expiry => market
 
-    function createMarket(IERC20 underlying, uint256 expiry) external returns (address market) {
+    function createMarket(IERC20 underlying, uint256 expiry, string memory marketName) external returns (address market) {
         require(getMarket[address(underlying)][expiry] == address(0), "exists");
 
-        MiniPendleMarket m = new MiniPendleMarket(underlying, expiry);
+        MiniPendleMarket m = new MiniPendleMarket(underlying, expiry, marketName);
         market = address(m);
 
         getMarket[address(underlying)][expiry] = market;
