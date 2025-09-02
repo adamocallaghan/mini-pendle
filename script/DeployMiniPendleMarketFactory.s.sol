@@ -22,7 +22,7 @@ contract DeployScript is Script {
         string memory marketName = "USDC-aUSDC-AAVE";
 
         // Deploy Market
-        address market = factory.createMarket(IERC20(underlying), maturity);
+        address market = factory.createMarket(IERC20(underlying), maturity, marketName);
         console.log("First market deployed at:", market);
 
         vm.stopBroadcast();
